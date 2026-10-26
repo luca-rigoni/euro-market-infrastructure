@@ -4,7 +4,7 @@ import sqlite3
 import pandas as pd
 from pathlib import Path
 
-DB_PATH = Path("data/processed/ea_macro.db")
+DB_PATH = Path("data/processed/market_infrastructure.db")
 
 SCHEMA = """
     CREATE TABLE IF NOT EXISTS series (
@@ -84,32 +84,3 @@ def load_series(connection, series_id):
     """
     df = pd.read_sql_query(query, connection, params=(series_id,))
     return df
-
-
-if __name__ == "__main__":
-    from src.download import SERIES, fetch_series
-
-    connection = connect("data/processed/test.db")
-
-    # Data download.py, obtains the latest data for the HICP series
-    hicp_info = SERIES["hicp"]
-    hicp_data = fetch_series(hicp_info["flow"], hicp_info["key"])
-
-    # Saves the series metadata and observations into the database
-    save_series(connection, "hicp", hicp_info)
-    save_observations(connection, "hicp", hicp_data)
-
-    # confirms that the data has been saved
-    connection.commit()
-
-    # prints the number of observations saved for the HICP series
-    print("DB observations count:")
-    print(
-        connection.execute("SELECT COUNT(*) FROM observations").fetchone()
-    )
-
-    print ("\nLast 5 months read from DB:")
-    print(load_series(connection, "hicp").tail())
-
-    # closes the database connection
-    connection.close()
