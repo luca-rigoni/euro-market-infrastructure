@@ -1,0 +1,72 @@
+---------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/lucarigoni/Projects/euro-market-infrastructure/output/target_panel_stata.txt
+  log type:  text
+ opened on:  26 Oct 2026, 15:22:10
+
+. 
+. clear all
+
+. import delimited "data/processed/target_panel.csv", clear varnames(1)
+(encoding automatically selected: ISO-8859-1)
+(7 vars, 2,397 obs)
+
+. 
+. drop if country == "DE"            // benchmark: its spread is zero by construction
+(218 observations deleted)
+
+. 
+. gen mdate = monthly(month, "YM")
+
+. format mdate %tm
+
+. encode country, gen(cid)
+
+. xtset cid mdate
+
+Panel variable: cid (unbalanced)
+ Time variable: mdate, 2008m5 to 2026m6, but with a gap
+         Delta: 1 month
+
+. 
+. gen d_target_gdp = D.target_gdp    // missing after a gap, as in Python
+(11 missing values generated)
+
+. gen d_spread = D.spread
+(11 missing values generated)
+
+. 
+. * Country fixed effects (fe), month fixed effects (i.mdate), errors clustered by country
+. quietly xtreg d_target_gdp d_spread i.mdate, fe vce(cluster cid)
+
+. estimates store full
+
+. quietly xtreg d_target_gdp d_spread i.mdate if inrange(mdate, tm(2008m6), tm(2014m12)), fe vce(cluster cid)
+
+. estimates store crisis
+
+. quietly xtreg d_target_gdp d_spread i.mdate if inrange(mdate, tm(2015m1), tm(2026m6)), fe vce(cluster cid)
+
+. estimates store purchases
+
+. 
+. estimates table full crisis purchases, keep(d_spread) b(%9.3f) se(%9.3f) p(%9.3f) stats(N)
+
+--------------------------------------------------
+    Variable |   full       crisis     purchases  
+-------------+------------------------------------
+    d_spread |    -0.706      -0.652      -1.224  
+             |     0.321       0.345       0.419  
+             |     0.055       0.092       0.017  
+-------------+------------------------------------
+           N |      2168         790        1378  
+--------------------------------------------------
+                                    Legend: b/se/p
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/lucarigoni/Projects/euro-market-infrastructure/output/target_panel_stata.txt
+  log type:  text
+ closed on:  26 Oct 2026, 15:22:11
+---------------------------------------------------------------------------------------------------------------------------------

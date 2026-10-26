@@ -63,3 +63,17 @@ def country_panel(connection, country):
 def build_panel(connection, countries=COUNTRIES):
     """Stack the panels of all countries into one table (country, month, variables)."""
     return pd.concat([country_panel(connection, c) for c in countries], ignore_index=True)
+
+def add_changes(panel, columns=("target_gdp", "spread")):
+    """Add the monthly change of each column (d_target_gdp, d_spread), within each country.
+
+    A change is left missing when the previous row is another country or not the
+    previous month (a gap in the data), so that it never spans two countries or months.
+    """
+    panel = panel.sort_values(["country", "month"]).reset_index(drop=True)
+    months = pd.Series(pd.PeriodIndex(panel["month"], freq="M").asi8, index=panel.index)
+    consecutive = panel["country"].eq(panel["country"].shift()) & months.diff().eq(1)
+    for column in columns:
+        panel[f"d_{column}"] = panel[column].diff().where(consecutive)
+    return panel
+

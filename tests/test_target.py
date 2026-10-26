@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from src.database import connect, save_observations, save_series
-from src.target import annual_sum, build_panel, quarterly_to_monthly
+from src.target import annual_sum, build_panel, quarterly_to_monthly, add_changes
 
 
 def periods(start, values, freq):
@@ -55,3 +55,16 @@ def test_panel_computes_spread_and_ratio_to_gdp(connection):
     assert italy["spread"].tolist() == pytest.approx([1.5] * 3)          # 4.0 - 2.5
     assert italy["target_gdp"].tolist() == pytest.approx([-10.0] * 3)    # -100 / 1000 * 100
     assert (panel.loc[panel["country"] == "DE", "spread"] == 0).all()
+
+def test_changes_never_span_two_countries_or_a_gap():
+    panel = pd.DataFrame({
+        "country": ["IT", "IT", "IT", "ES", "ES"],
+        "month": ["2021-01", "2021-02", "2021-04", "2021-01", "2021-02"],  # IT misses March
+        "target_gdp": [1.0, 3.0, 4.0, 10.0, 7.0],
+        "spread": [1.0, 1.5, 2.0, 1.0, 1.0],
+    })
+    result = add_changes(panel)
+    italy = result[result["country"] == "IT"]["d_target_gdp"].tolist()
+    spain = result[result["country"] == "ES"]["d_target_gdp"].tolist()
+    assert pd.isna(italy[0]) and italy[1] == 2.0 and pd.isna(italy[2])
+    assert pd.isna(spain[0]) and spain[1] == -3.0
