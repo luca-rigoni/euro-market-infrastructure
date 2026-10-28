@@ -133,14 +133,13 @@ asset-backed securities (category V) fell from 1,650 to 581.
 ![Monthly changes](figures/collateral_turnover.png)
 
 Comparing consecutive snapshots separates assets that leave the list because they mature from
-assets removed while still outstanding, which reflect eligibility decisions. The largest movements
-match changes in the collateral framework:
+assets removed while still outstanding, which reflect eligibility decisions. A test on a small invented database checks that this split is computed correctly. The largest movements match changes in the collateral framework:
 
 | Month | What the data show | Related change in the collateral framework |
 |---|---|---|
 | December 2010 | 13,004 assets removed before maturity, almost all bank debt in category IV, including assets in US dollars and pounds sterling | End of the temporary expansion of October 2008, which had admitted bank debt traded on certain non-regulated markets and assets in US dollars, pounds sterling and yen (eligible until December 2010) |
 | November 2012 | Additions include more than 500 assets in US dollars | Assets in US dollars, pounds sterling and yen admitted again (decision of 6 September 2012) |
-| December 2018 | 5,320 assets removed before maturity, mostly unsecured bank bonds | End of the transition to the new rules for unsecured bank bonds decided in December 2017: bonds not meeting them, including those issued by entities outside the EU, became ineligible, and eligible unsecured bank bonds fell by more than €400 billion |
+| December 2018 | 5,320 assets removed before maturity, mostly unsecured bank bonds | End of the transitionf to the new rules for unsecured bank bonds decided in December 2017: bonds not meeting them, including those issued by entities outside the EU, became ineligible, and eligible unsecured bank bonds fell by more than €400 billion |
 | June 2023 | 3,218 assets change category, of which 2,997 covered bonds move from category III to II and about 70 assets from II to I | From 29 June 2023 all covered bonds are assigned to category II and EU bonds move to category I |
 
 In December 2011 about 12,000 assets, mostly euro-denominated bank debt in category IV, were added
@@ -203,6 +202,6 @@ figures/    figures used in this README
 
 ## Use of AI
 
-Parts of the code were drafted with the help of an AI assistant (Claude). I reviewed and ran all of
+Parts of the code were drafted and revised with the help of an AI assistant. I reviewed and ran all of
 it, adapted it to my existing modules, and checked the results against the data, the tests and,
 for the panel regression, an independent replication in Stata.
