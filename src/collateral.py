@@ -72,6 +72,8 @@ def valid_isin(code):
 
 def country_code(values, prefix):
     """Extract the two-letter country from codes such as IRFR (issuer residence) or CLFR01 (CSD)."""
+    
+    # (?=[A-Z]{2}) = "only if two letters follow": IRFR -> FR, CLFR01 -> FR, a plain DE stays DE
     return values.str.replace(rf"^{prefix}(?=[A-Z]{{2}})", "", regex=True).str[:2]
 
 
@@ -116,7 +118,10 @@ def save_snapshot(connection, table):
     """Insert one harmonised snapshot; loading the same snapshot again replaces its rows."""
     connection.executescript(SCHEMA)
     columns = list(table.columns)
+
+    # SQLite does not understand pandas' NaN: missing values become None (NULL in the database)
     rows = table.astype(object).where(table.notna(), None).itertuples(index=False, name=None)
+    
     connection.executemany(
         f"INSERT OR REPLACE INTO eligible_assets ({', '.join(columns)}) "
         f"VALUES ({', '.join('?' * len(columns))})",
