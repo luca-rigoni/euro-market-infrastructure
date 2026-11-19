@@ -1,9 +1,11 @@
 """Download the yearly archives of the Eurosystem list of eligible marketable assets
 and keep one snapshot per month (the last working day of each month).
 
-Each yearly ZIP contains one file per working day (ea_all_YYMMDD.tgz in the early
-years, ea_csv_YYMMDD.csv.gz later). Keeping the month-end snapshots gives a monthly
-panel of eligible assets and saves disk space: each archive is deleted once read.
+Each yearly ZIP contains one file per working day (ea_all_YYMMDD.tgz until June 2013,
+ea_all_YYMMDD.txt.gz until May 2015, ea_csv_YYMMDD.csv.gz afterwards). Keeping the
+month-end snapshots gives a monthly panel of eligible assets and saves disk space:
+each archive is deleted once read. The 2026 archive was not yet published when the data
+were collected, so the snapshot of 23 October 2026 was downloaded by hand (see README).
 
 Run from the project root:  python -m scripts.fetch_collateral
 """

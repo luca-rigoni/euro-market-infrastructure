@@ -6,7 +6,7 @@ import pandas as pd
 
 from src.collateral import country_code, harmonise, valid_isin
 
-# One asset as it appears in a 2010-2014 file and in a file from 2016
+# One asset as it appears in a file up to April 2014 and in a file from September 2015
 OLD = pd.DataFrame({
     "ISIN_CODE": ["FR001400BHC8", "FR001400BHC9"],   # the second has a wrong check digit
     "LIQUIDITY_CLASS": ["L1D", "L1D"],
@@ -15,7 +15,7 @@ OLD = pd.DataFrame({
     "ISSUER_RESIDENCE": ["IRFR", "IRFR"],
     "ISSUER_GROUP": ["IG4", "IG4"],
     "GUARANTOR_GROUP": ["", ""],
-    "COUNTRY_OF_LOCATION": ["FR", "FR"],
+    "COUNTRY_OF_LOCATION": ["CLFR", "CLFR"],
     "COUPON_DEFINITION": ["CD2", "CD2"],
     "MATURITY_DATE": ["08/07/2027 00:00:00", "08/07/2027 00:00:00"],
     "VALUATION_HAIRCUT": ["22.3", "22.3"],

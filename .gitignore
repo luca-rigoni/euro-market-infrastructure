@@ -11,15 +11,6 @@ data/raw/*
 *.db
 *.sqlite
 
-# Dynare / MATLAB output (Dynare creates a folder per model)
-dynare/*/
-*.log
-*.asv
-*.mex*
-
 # macOS and editors
 .DS_Store
 .vscode/
-
-# Personal practice notebooks
-notebooks/practice_*

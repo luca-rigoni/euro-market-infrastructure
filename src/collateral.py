@@ -3,9 +3,9 @@
 Each snapshot lists every asset accepted as collateral in Eurosystem credit
 operations on one day. The files are tab-separated text encoded in UTF-16 and
 come in three containers over time:
-    ea_all_YYMMDD.tgz      2010-2013  (a tar archive with a .txt file inside)
-    ea_all_YYMMDD.txt.gz   2014-2015
-    ea_csv_YYMMDD.csv.gz   from 2016
+    ea_all_YYMMDD.tgz      April 2010 - June 2013  (a tar archive with a .txt file inside)
+    ea_all_YYMMDD.txt.gz   July 2013 - May 2015
+    ea_csv_YYMMDD.csv.gz   from June 2015
 """
 
 import io
@@ -20,7 +20,7 @@ READ_OPTIONS = {
     "sep": "\t",
     "encoding": "utf-16",      # the files start with the UTF-16 byte order mark
     "dtype": str,              # keep every code as text (ISINs, categories, dates)
-    "keep_default_na": False,  # "NA" is Namibia's country code, not a missing value
+    "keep_default_na": False,  # keep "NA" (Namibia's country code) and empty fields as text, not NaN
     "quoting": 3,              # csv.QUOTE_NONE: issuer names may contain quote marks
 }
 
@@ -42,7 +42,8 @@ def read_snapshot(path):
     return pd.read_csv(path, compression="gzip", **READ_OPTIONS)
 
 
-# Columns kept, with their name in the files from 2016 and, if different, in the older files
+# Columns kept, with their current name and, if different, the name used in the older files
+# (COUNTRY_OF_LOCATION until April 2014; LIQUIDITY_CLASS and VALUATION_HAIRCUT until August 2015)
 COLUMNS = {
     "isin": ["ISIN_CODE"],
     "haircut_category": ["HAIRCUT_CATEGORY", "LIQUIDITY_CLASS"],

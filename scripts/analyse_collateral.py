@@ -1,6 +1,6 @@
 """Describe how the Eurosystem collateral list changed over time, from the database.
 
-Outputs (CSV files are also the data sources of the Tableau dashboard):
+Outputs:
     output/collateral_composition.csv   eligible assets by month and haircut category
     output/collateral_turnover.csv      assets added and removed each month
     output/collateral_settlement.csv    share of assets settled outside the issuer's country

@@ -6,7 +6,7 @@ import requests
 
 BASE_URL = "https://data-api.ecb.europa.eu/service/data"
 
-# Euro area countries with data since 2008 (Luxembourg excluded as a financial-centre outlier)
+# The twelve euro area members since 2001 (Luxembourg excluded as a financial-centre outlier)
 COUNTRIES = ["AT", "BE", "DE", "ES", "FI", "FR", "GR", "IE", "IT", "NL", "PT"]
 
 

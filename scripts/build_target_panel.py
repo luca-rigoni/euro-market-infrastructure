@@ -16,7 +16,7 @@ def main():
     panel = build_panel(connection)
     connection.close()
 
-    panel["month"] = panel["month"].astype(str)  # e.g. 2012-07, readable by Stata and Tableau
+    panel["month"] = panel["month"].astype(str)  # e.g. 2012-07, readable by Stata
     panel.to_csv(OUTPUT, index=False)
 
     print(f"{len(panel)} rows, {panel['country'].nunique()} countries, "

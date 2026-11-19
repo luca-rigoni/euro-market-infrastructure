@@ -7,7 +7,10 @@ Model, for country i and month t (Germany excluded, its spread is zero by constr
 a_i and g_t are country and month fixed effects: g_t absorbs everything common to all
 countries in a month (ECB policy, global shocks), so beta compares countries in the same month.
 Standard errors are clustered by country and, as a check, Driscoll-Kraay (robust to
-correlation across countries and over time), because 10 clusters are few.
+correlation across countries and over time), because 10 clusters are few. p-values come
+from the normal distribution (linearmodels' default); the Stata replication applies a
+small-sample correction and a t distribution with 9 degrees of freedom, so its clustered
+p-values are larger.
 
 Run from the project root after build_target_panel:  python -m scripts.estimate_target_panel
 """
@@ -30,7 +33,7 @@ SAMPLES = {
 
 
 def estimate(data):
-    """Fit the fixed-effects regression and return the coefficient with both standard errors."""
+    """Fit the fixed-effects regression; return the coefficient, both standard errors and p-values."""
     data = data.assign(time=pd.PeriodIndex(data["month"], freq="M").to_timestamp())
     data = data.set_index(["country", "time"])
     model = PanelOLS.from_formula("d_target_gdp ~ d_spread + EntityEffects + TimeEffects", data=data)
@@ -39,7 +42,9 @@ def estimate(data):
     return {
         "beta": clustered.params["d_spread"],
         "se_clustered": clustered.std_errors["d_spread"],
+        "p_clustered": clustered.pvalues["d_spread"],
         "se_driscoll_kraay": driscoll_kraay.std_errors["d_spread"],
+        "p_driscoll_kraay": driscoll_kraay.pvalues["d_spread"],
         "observations": int(clustered.nobs),
     }
 

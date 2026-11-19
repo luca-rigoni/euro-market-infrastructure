@@ -1,8 +1,5 @@
-numpy
 pandas
 requests
-statsmodels
 linearmodels
 matplotlib
-networkx
 pytest
